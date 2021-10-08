@@ -5,8 +5,10 @@ from datetime import datetime
 from merkle_tree import MerkleTools
 from tools import *
 
+# TODO -----------------------------------------------------------------------
 # smart contract
 # certificate TLS / SSL = time limit - refresh token
+# TODO -----------------------------------------------------------------------
 
 class Block:
     def __init__(self, index, previous_hash, merkle_tree, timestamp, nonce):
