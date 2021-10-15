@@ -11,6 +11,9 @@ from tools import *
 # certificate TLS / SSL = time limit - refresh token
 # - optional for servers
 # add fucntion where the info is added after being valid
+# make diffuclty -> adjusted by a protocal
+# merkle tree -> handle images / make it independent from blockchain
+# make one demo where everything should work
 # TODO -----------------------------------------------------------------------
 
 class Block:
@@ -41,7 +44,9 @@ class Block:
         # modification removes merkle_tree class from the dictionary in order
         # to make hashing work
         modification = without_keys(self.__dict__, {"merkle_tree"})
+        print(modification)
         block_string = json.dumps(modification, sort_keys=True)
+        print(block_string)
         first_hash = sha256(block_string.encode()).hexdigest()
         second_hash = sha256(first_hash.encode()).hexdigest()
         return second_hash
@@ -49,10 +54,10 @@ class Block:
     def compute_hash(self):
         hash = self.hashing()
         while int(hash, 16) > (2 ** (256 - self.difficulty)):
-                self.nonce += 1
-                # reseting this, otherwise using the nonce wont give the same hash
-                # since python cumulate nonce times to get the hash without the reset
-                hash = self.hashing()
+            self.nonce += 1
+            # reseting this, otherwise using the nonce wont give the same hash
+            # since python cumulate nonce times to get the hash without the reset
+            hash = self.hashing()
         # while not hash.startswith("0" * difficulty):
         #     self.nonce += 1
         #     hash = self.hashing()
