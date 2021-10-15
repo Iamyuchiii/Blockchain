@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 from merkle_tree import MerkleTools
 from tools import *
-from copy import deepcopy
 
 # TODO -----------------------------------------------------------------------
 # smart contract
@@ -76,7 +75,8 @@ class Blockchain():
         """
         :return: adds a origin dummy block to the blockchain
         """
-        mt = self.build_merkle_tree({"user_input" : "dummy"})
+        maketree = BuildMerkle({"user_input" : "dummy"})
+        mt = maketree.mt
         # makes first block for as dummy data
         origin_block = Block("Origin", 0x0, mt,
                              "datetime.now().timestap()", 5)
@@ -109,27 +109,14 @@ class Blockchain():
                self.getlasthash() == block.previous_hash and \
                int(second_hash, 16) < 2 ** (256 - block.difficulty)
 
-    def build_merkle_tree(self, data):
-        """
-        Makes a merkle tree formation using provided data (block_content)
-        :param data: block_content from the block
-        :return: merkle tree class
-        """
-        temp = []
-        for key, value in data.items():
-            temp.append(str({key: value}))
-        mt = MerkleTools(hash_type="sha256")
-        mt.add_leaf(temp, True)
-        mt.make_tree()
-        return mt
-
     def add_info(self, data):
         """
         adds a block with info to the blockchain
         :param data: data in dictionary format
         :return: last block
         """
-        mt = self.build_merkle_tree(data)
+        maketree = BuildMerkle(data)
+        mt = maketree.mt
         block = Block(len(self.chain), self.chain[-1], mt,
                       "datetime.now().isoformat()", 5)
         if self.proof_of_work(block):
@@ -141,6 +128,24 @@ class Blockchain():
             print("aa")
         return self.blocks[-1]
 
+class BuildMerkle():
+    def __init__(self, data):
+        self.data = data
+        self.mt = self.build_merkle_tree()
+
+    def build_merkle_tree(self):
+        """
+        Makes a merkle tree formation using provided data (block_content)
+        :param data: block_content from the block
+        :return: merkle tree class
+        """
+        temp = []
+        for key, value in self.data.items():
+            temp.append(str({key: value}))
+        mt = MerkleTools(hash_type="sha256")
+        mt.add_leaf(temp, True)
+        mt.make_tree()
+        return mt
 
 if __name__ == "__main__":
     data = {
