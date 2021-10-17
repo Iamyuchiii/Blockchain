@@ -165,6 +165,8 @@ class Data_processing():
     def data_type(self):
         if self.type.lower() == "image":
             image_list = self.image_processing()
+            return self.image_hasing(image_list)
+
         elif self.type.lower() == "dictionary":
             return self.data
 
@@ -187,11 +189,9 @@ class Data_processing():
 
 
 
-
-
-
-
 if __name__ == "__main__":
+    laptop = "D:\master_thesis\Blockchain"
+    computer = r"D:\Blockchain\test_data\test"
     data = {
         "input" : "asdasdasd",
         "output" : "assdasdasdasd"
@@ -201,7 +201,7 @@ if __name__ == "__main__":
     # chain.add_info(data)
     # print(chain.blocks)
 
-    processing = Data_processing(r"D:\Blockchain\test_data\test", type="image")
+    processing = Data_processing(computer, type="image")
     data1 = processing.data_type()
 
 
