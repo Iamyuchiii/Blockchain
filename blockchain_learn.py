@@ -17,20 +17,19 @@ import imagehash
 # - optional for servers
 # add fucntion where the info is added after being valid
 # make diffuclty -> adjusted by a protocal
-# merkle tree -> handle images / make it independent from blockchain
+# merkle tree -> handle images / make it independent from blockchain X
 # make one demo where everything should work
 # TODO -----------------------------------------------------------------------
 
 class Block:
-    def __init__(self, index, previous_hash, merkle_tree, timestamp, difficulty):
+    def __init__(self, index, previous_hash, merkle_tree, timestamp):
         self.index = index
         self.previous_hash = previous_hash
         self.timestamp = timestamp
         self.nonce = 0
-        self.difficulty = difficulty
         self.merkle_tree = merkle_tree
         self.merkle_root = self.merkle_tree.get_merkle_root()
-        self.block_hash = self.compute_hash()
+        self.block_hash = self.hash_difficulty()
 
     def __str__(self):
         """
@@ -38,7 +37,7 @@ class Block:
         """
         return str(self.__dict__)
 
-    def hashing(self):
+    def compute_hash(self):
         """
         Makes double hash from the information store in the block in form of
         dictionary
@@ -49,20 +48,19 @@ class Block:
         # modification removes merkle_tree class from the dictionary in order
         # to make hashing work
         modification = without_keys(self.__dict__, {"merkle_tree"})
-        print(modification)
         block_string = json.dumps(modification, sort_keys=True)
-        print(block_string)
         first_hash = sha256(block_string.encode()).hexdigest()
         second_hash = sha256(first_hash.encode()).hexdigest()
         return second_hash
 
-    def compute_hash(self):
-        hash = self.hashing()
-        while int(hash, 16) > (2 ** (256 - self.difficulty)):
+    def hash_difficulty(self):
+        difficulty = 5
+        hash = self.compute_hash()
+        while int(hash, 16) > (2 ** (256 - difficulty)):
             self.nonce += 1
             # reseting this, otherwise using the nonce wont give the same hash
             # since python cumulate nonce times to get the hash without the reset
-            hash = self.hashing()
+            hash = self.compute_hash()
         # while not hash.startswith("0" * difficulty):
         #     self.nonce += 1
         #     hash = self.hashing()
@@ -73,7 +71,7 @@ class Blockchain():
     def __init__(self):
         self.chain = []
         self.blocks = []
-        self.origin_block()
+        self.genesis_block()
 
     def __str__(self):
         """
@@ -81,19 +79,18 @@ class Blockchain():
         """
         return str(self.__dict__)
 
-    def origin_block(self):
+    def genesis_block(self):
         """
         :return: adds a origin dummy block to the blockchain
         """
-        maketree = BuildMerkle({"user_input" : "dummy"})
-        mt = maketree.mt
+        mt = BuildMerkle({"user_input" : "dummy"}).merkle_tree
         # makes first block for as dummy data
-        origin_block = Block("Origin", 0x0, mt,
-                             "datetime.now().timestap()", 5)
+        genesis = Block("Origin", 0x0, mt,
+                             "datetime.now().timestap()")
         # add block to the chain
-        self.chain.append(origin_block.block_hash)
+        self.chain.append(genesis.block_hash)
         # saves the information of the firstblock as dictionary
-        self.blocks.append(origin_block.__dict__)
+        self.blocks.append(genesis.__dict__)
 
     def getlasthash(self):
         """
@@ -117,18 +114,16 @@ class Blockchain():
         second_hash = sha256(first_hash.encode()).hexdigest()
         return second_hash == block.block_hash and \
                self.getlasthash() == block.previous_hash and \
-               int(second_hash, 16) < 2 ** (256 - block.difficulty)
+               int(second_hash, 16) < 2 ** (256 - 5)
 
-    def add_info(self, data):
+    def add_info(self, mt):
         """
         adds a block with info to the blockchain
         :param data: data in dictionary format
         :return: last block
         """
-        maketree = BuildMerkle(data)
-        mt = maketree.mt
         block = Block(len(self.chain), self.chain[-1], mt,
-                      "datetime.now().isoformat()", 5)
+                      "datetime.now().isoformat()")
         if self.proof_of_work(block):
             # add block to the chain
             self.chain.append(block.block_hash)
@@ -141,9 +136,16 @@ class Blockchain():
 class BuildMerkle():
     def __init__(self, data):
         self.data = data
-        self.mt = self.build_merkle_tree()
+        self.merkle_tree = self.build_merkle()
 
-    def build_merkle_tree(self):
+    def build_merkle(self):
+        if type(self.data) == dict:
+            return self.mt_selfthash()
+        else:
+            raise Exception("data type is not supported, please use "
+                            "dictionary")
+
+    def mt_selfthash(self):
         """
         Makes a merkle tree formation using provided data (block_content)
         :param data: block_content from the block
@@ -169,6 +171,8 @@ class Data_processing():
 
         elif self.type.lower() == "dictionary":
             return self.data
+        else:
+            raise Exception("Cant process this type of data")
 
     def image_processing(self):
         saved_image = []
@@ -176,33 +180,44 @@ class Data_processing():
         for image in os.listdir(base_path):
             image_file = os.path.join(base_path, image)
             try:
-                open = Image.open(image_file)
-                saved_image.append(open)
+                saved_image.append(Image.open(image_file))
             except Exception as error:
                 print(f"Error found: {error}")
         return saved_image
 
     def image_hasing(self, image_list):
+        image_hash = {}
         for image in image_list:
-            pass
+            hash = imagehash.average_hash(image)
+            filename = image.filename.split("\\")[-1]
+            image_hash[filename]=str(hash)
+        return image_hash
 
 
 
 
 if __name__ == "__main__":
+    # image data
     laptop = "D:\master_thesis\Blockchain"
     computer = r"D:\Blockchain\test_data\test"
+    # string data
     data = {
         "input" : "asdasdasd",
         "output" : "assdasdasdasd"
     }
-    #
-    # chain = Blockchain()
-    # chain.add_info(data)
-    # print(chain.blocks)
 
+    # processing data
     processing = Data_processing(computer, type="image")
-    data1 = processing.data_type()
+    image_hashlist = processing.data_type()
+    # building merkletree
+    mt = BuildMerkle(image_hashlist).merkle_tree
+    # adding blocks
+    chain = Blockchain()
+    chain.add_info(mt)
+    for i in chain.blocks:
+        print(i)
+    print(chain.chain)
+
 
 
 
