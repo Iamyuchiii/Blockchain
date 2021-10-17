@@ -4,6 +4,11 @@ import json
 from datetime import datetime
 from merkle_tree import MerkleTools
 from tools import *
+##############################################################################
+import os
+from PIL import Image
+import imagehash
+##############################################################################
 
 # TODO -----------------------------------------------------------------------
 # smart contract
@@ -152,15 +157,52 @@ class BuildMerkle():
         mt.make_tree()
         return mt
 
+class Data_processing():
+    def __init__(self, data, type="dictionary"):
+        self.data = data
+        self.type = type
+
+    def data_type(self):
+        if self.type.lower() == "image":
+            image_list = self.image_processing()
+        elif self.type.lower() == "dictionary":
+            return self.data
+
+    def image_processing(self):
+        saved_image = []
+        base_path = self.data
+        for image in os.listdir(base_path):
+            image_file = os.path.join(base_path, image)
+            try:
+                open = Image.open(image_file)
+                saved_image.append(open)
+            except Exception as error:
+                print(f"Error found: {error}")
+        return saved_image
+
+    def image_hasing(self, image_list):
+        for image in image_list:
+            pass
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     data = {
         "input" : "asdasdasd",
         "output" : "assdasdasdasd"
     }
+    #
+    # chain = Blockchain()
+    # chain.add_info(data)
+    # print(chain.blocks)
 
-    chain = Blockchain()
-    chain.add_info(data)
-    print(chain.blocks)
+    processing = Data_processing(r"D:\Blockchain\test_data\test", type="image")
+    data1 = processing.data_type()
 
 
 
