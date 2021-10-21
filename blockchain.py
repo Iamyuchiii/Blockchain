@@ -1,14 +1,9 @@
 # https://www.youtube.com/watch?v=MyXndVDCIY8&list=PLTAIl4ewbGt8EuEPqNzMS58MrnUuwNd67&index=11&t=77s
 from hashlib import sha256
 import json
-from datetime import datetime
+from time import time
 from merkle_tree import MerkleTools
 from tools import *
-##############################################################################
-import os
-from PIL import Image
-import imagehash
-##############################################################################
 
 # TODO -----------------------------------------------------------------------
 # smart contract
@@ -16,7 +11,7 @@ import imagehash
 # certificate TLS / SSL = time limit - refresh token
 # - optional for servers
 # add fucntion where the info is added after being valid
-# make diffuclty -> adjusted by a protocal
+# make diffuclty -> adjusted by a protocal (hard)
 # merkle tree -> handle images / make it independent from blockchain X
 # make one demo where everything should work
 # TODO -----------------------------------------------------------------------
@@ -54,7 +49,7 @@ class Block:
         return second_hash
 
     def hash_difficulty(self):
-        difficulty = 5
+        difficulty = 10
         hash = self.compute_hash()
         while int(hash, 16) > (2 ** (256 - difficulty)):
             self.nonce += 1
@@ -63,13 +58,13 @@ class Block:
             hash = self.compute_hash()
         # while not hash.startswith("0" * difficulty):
         #     self.nonce += 1
-        #     hash = self.hashing()
+        #     hash = self.compute_hash()
         return hash
 
 
 class Blockchain():
     def __init__(self):
-        self.chain = []
+        self.difficulty = 2
         self.blocks = []
         self.genesis_block()
 
@@ -86,20 +81,16 @@ class Blockchain():
         mt = BuildMerkle({"user_input" : "dummy"}).merkle_tree
         # makes first block for as dummy data
         genesis = Block("Origin", 0x0, mt,
-                             "datetime.now().timestap()")
-        # add block to the chain
-        self.chain.append(genesis.block_hash)
+                             time())
         # saves the information of the firstblock as dictionary
         self.blocks.append(genesis.__dict__)
 
-    def getlasthash(self):
-        """
-        :return: last hashvalue of the blockchain
-        """
-        return self.chain[-1]
+    def adjust_difficulty(self, block_index):
+        if block_index % 2 == 0:
+            pass
 
     def getlastblock(self):
-        return self.blocks[-1]
+        return self.blocks[-1] if self.blocks else None
 
     def proof_of_work(self, block):
         """
@@ -113,7 +104,7 @@ class Blockchain():
         first_hash = sha256(block_string.encode()).hexdigest()
         second_hash = sha256(first_hash.encode()).hexdigest()
         return second_hash == block.block_hash and \
-               self.getlasthash() == block.previous_hash and \
+               self.blocks[-1]["block_hash"] == block.previous_hash and \
                int(second_hash, 16) < 2 ** (256 - 5)
 
     def add_info(self, mt):
@@ -122,16 +113,14 @@ class Blockchain():
         :param data: data in dictionary format
         :return: last block
         """
-        block = Block(len(self.chain), self.chain[-1], mt,
-                      "datetime.now().isoformat()")
+        block = Block(len(self.blocks), self.blocks[-1]["block_hash"], mt,
+                      time())
         if self.proof_of_work(block):
-            # add block to the chain
-            self.chain.append(block.block_hash)
             # saves the information of the firstblock as dictionary
             self.blocks.append(block.__dict__)
+            self.adjust_difficulty(len(self.blocks)-1)
         else:
-            print("aa")
-        return self.blocks[-1]
+            print("Block is not added to the chain ")
 
 class BuildMerkle():
     def __init__(self, data):
@@ -159,64 +148,27 @@ class BuildMerkle():
         mt.make_tree()
         return mt
 
-class Data_processing():
-    def __init__(self, data, type="dictionary"):
-        self.data = data
-        self.type = type
-
-    def data_type(self):
-        if self.type.lower() == "image":
-            image_list = self.image_processing()
-            return self.image_hasing(image_list)
-
-        elif self.type.lower() == "dictionary":
-            return self.data
-        else:
-            raise Exception("Cant process this type of data")
-
-    def image_processing(self):
-        saved_image = []
-        base_path = self.data
-        for image in os.listdir(base_path):
-            image_file = os.path.join(base_path, image)
-            try:
-                saved_image.append(Image.open(image_file))
-            except Exception as error:
-                print(f"Error found: {error}")
-        return saved_image
-
-    def image_hasing(self, image_list):
-        image_hash = {}
-        for image in image_list:
-            hash = imagehash.average_hash(image)
-            filename = image.filename.split("\\")[-1]
-            image_hash[filename]=str(hash)
-        return image_hash
-
-
-
-
-if __name__ == "__main__":
-    # image data
-    laptop = "D:\master_thesis\Blockchain"
-    computer = r"D:\Blockchain\test_data\test"
-    # string data
-    data = {
-        "input" : "asdasdasd",
-        "output" : "assdasdasdasd"
-    }
-
-    # processing data
-    processing = Data_processing(computer, type="image")
-    image_hashlist = processing.data_type()
-    # building merkletree
-    mt = BuildMerkle(image_hashlist).merkle_tree
-    # adding blocks
-    chain = Blockchain()
-    chain.add_info(mt)
-    for i in chain.blocks:
-        print(i)
-    print(chain.chain)
+# if __name__ == "__main__":
+#     # image data
+#     laptop = "D:\master_thesis\Blockchain"
+#     computer = r"D:\Blockchain\test_data\test"
+#     # string data
+#     data = {
+#         "input" : "asdasdasd",
+#         "output" : "assdasdasdasd"
+#     }
+#     # processing data
+#     processing = Data_processing(computer, type="image")
+#     image_hashlist = processing.data_type()
+#     # building merkletree
+#     mt = BuildMerkle(image_hashlist).merkle_tree
+#     mt2 = BuildMerkle(data).merkle_tree
+#     # # adding blocks
+#     chain = Blockchain()
+#     chain.add_info(mt)
+#     chain.add_info(mt2)
+#     for i in chain.blocks:
+#         print(i)
 
 
 
