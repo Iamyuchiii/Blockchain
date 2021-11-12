@@ -2,7 +2,7 @@ import imagehash
 import os
 from PIL import Image
 
-class Data_processing():
+class Image_processing():
     def __init__(self, data, type="dictionary"):
         self.data = data
         self.type = type

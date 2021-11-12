@@ -9,7 +9,7 @@ def wrapper():
         mt = None
         # processing data
         if os.path.exists(data):
-            processing = Data_processing(data, type="image")
+            processing = Image_processing(data, type="image")
             image_hashlist = processing.data_type()
             mt = BuildMerkle(image_hashlist).merkle_tree
         elif data[0] == "{" and data[-1] == "}":
