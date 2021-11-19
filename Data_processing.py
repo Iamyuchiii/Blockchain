@@ -34,3 +34,10 @@ class Image_processing():
             filename = image.filename.split("\\")[-1]
             image_hash[filename]=str(hash)
         return image_hash
+
+class data_filtering():
+    def __init__(self, data):
+        self.data = data
+
+    def filtering(self):
+        pass
