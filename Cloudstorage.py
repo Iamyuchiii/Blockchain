@@ -7,6 +7,14 @@ class Dropbox_cloudstorage:
     def download_file(self):
         pass
 
+    def file_move(self, file_from, file_to):
+        """move a file to dropbox
+        """
+        dropbox_client = dropbox.Dropbox(self.access_token)
+
+        with open(file_from, 'rb') as f:
+            dropbox_client.files_upload(f.read(), file_to)
+
     def upload_file(self, file_from, file_to):
         """upload a file to Dropbox
         """
