@@ -1,6 +1,7 @@
 import imagehash
 import os
 from PIL import Image
+import json
 
 class Image_processing():
     def __init__(self, data, type="dictionary"):
@@ -35,9 +36,10 @@ class Image_processing():
             image_hash[filename]=str(hash)
         return image_hash
 
-class data_filtering():
+class Data_procsseing():
     def __init__(self, data):
         self.data = data
 
-    def filtering(self):
-        pass
+    def save_dict_txt(self, filename, path_to_save):
+        with open(f"{path_to_save}\{filename}.txt", "w") as file:
+            file.write(json.dumps(self.data))
