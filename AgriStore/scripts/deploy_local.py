@@ -1,4 +1,6 @@
+from sys import argv
 from brownie import AgriStorage, config, network
+from brownie.network import account
 from scripts.functions import get_accounts, local_blockchain
 
 
@@ -14,20 +16,23 @@ def deploy_greenhouseStorage():
     return greenhouse_Storage
 
 
-def store_hashes(productname, rootHash):
+def store_hashes(productname, roothash):
     # get the latest deployed contract
     greenhouse_Storage = AgriStorage[-1]
+    account = get_accounts()
     # set product name en link it to its hashes
-    set_keyname = greenhouse_Storage.set_productname(productname)
-    set_Hashes = greenhouse_Storage.updateLedger(rootHash)
+    set_keyname = greenhouse_Storage.set_productname(productname, {"from": account})
+    set_keyname.wait(1)
+    set_Hashes = greenhouse_Storage.updateLedger(roothash, {"from": account})
+    set_Hashes.wait(1)
 
 
-def check_ledger():
+def check_ledger(productname):
     greenhouse_Storage = AgriStorage[-1]
-    print(greenhouse_Storage.check_ledger("tomato"))
+    account = get_accounts()
+    print(greenhouse_Storage.check_ledger(productname, {"from": account}))
 
 
 def main():
     deploy_greenhouseStorage()
-    store_hashes("tomato", "AGJDHGAHJDGJHAD")
-    check_ledger()
+    store_hashes("tomato", "ahsgdjhagsd")
