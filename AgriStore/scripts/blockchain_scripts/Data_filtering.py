@@ -1,6 +1,3 @@
-import scipy.stats as stats
-
-
 class DataSort:
     def __init__(self, data):
         """Class for sorting datas
@@ -30,11 +27,3 @@ class DataSort:
         # makes tuple keys as string so json dumps can save the dictionary
         sorted_data = {str(key): value for key, value in sorted_data.items()}
         return sorted_data
-
-
-# if __name__ == "__main__":
-#     data = stats.uniform.rvs(size=100, loc = 40, scale = 80)
-#     mu, std = stats.norm.fit(data)
-#     datasort = DataSort(data)
-#     sorted_data = datasort.sortrank(10)
-#     print(sorted_data)
