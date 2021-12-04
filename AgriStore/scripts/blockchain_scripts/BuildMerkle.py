@@ -1,4 +1,4 @@
-from merkle_tree import *
+from blockchain_scripts.merkle_tree import *
 
 
 class BuildMerkle:
@@ -25,3 +25,6 @@ class BuildMerkle:
         mt.add_leaf(temp, True)
         mt.make_tree()
         return mt
+
+    def get_proof(self):
+        print(self.merkle_tree.get_proof())
