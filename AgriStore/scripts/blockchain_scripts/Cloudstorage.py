@@ -1,4 +1,6 @@
 import dropbox
+import logging
+import os
 
 
 class Dropbox_cloudstorage:
@@ -21,3 +23,7 @@ class Dropbox_cloudstorage:
 
         with open(file_from, "rb") as f:
             dropbox_client.files_upload(f.read(), file_to)
+
+
+class Google_drive:
+    pass
