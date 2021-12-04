@@ -8,17 +8,27 @@ if sys.version_info < (3, 6):
         import sha3
     except:
         from warnings import warn
+
         warn("sha3 is not working!")
 
 
 class MerkleTools(object):
     def __init__(self, hash_type="sha256"):
         hash_type = hash_type.lower()
-        if hash_type in ['sha256', 'md5', 'sha224', 'sha384', 'sha512',
-                         'sha3_256', 'sha3_224', 'sha3_384', 'sha3_512']:
+        if hash_type in [
+            "sha256",
+            "md5",
+            "sha224",
+            "sha384",
+            "sha512",
+            "sha3_256",
+            "sha3_224",
+            "sha3_384",
+            "sha3_512",
+        ]:
             self.hash_function = getattr(hashlib, hash_type)
         else:
-            raise Exception('`hash_type` {} nor supported'.format(hash_type))
+            raise Exception("`hash_type` {} nor supported".format(hash_type))
 
         self.reset_tree()
 
@@ -40,7 +50,7 @@ class MerkleTools(object):
             values = [values]
         for v in values:
             if do_hash:
-                v = v.encode('utf-8')
+                v = v.encode("utf-8")
                 v = self.hash_function(v).hexdigest()
             v = bytearray.fromhex(v)
             self.leaves.append(v)
@@ -63,15 +73,19 @@ class MerkleTools(object):
 
         new_level = []
         for l, r in zip(self.levels[0][0:N:2], self.levels[0][1:N:2]):
-            new_level.append(self.hash_function(l+r).digest())
+            new_level.append(self.hash_function(l + r).digest())
         if solo_leave is not None:
             new_level.append(solo_leave)
-        self.levels = [new_level, ] + self.levels  # prepend new level
+        self.levels = [
+            new_level,
+        ] + self.levels  # prepend new level
 
     def make_tree(self):
         self.is_ready = False
         if self.get_leaf_count() > 0:
-            self.levels = [self.leaves, ]
+            self.levels = [
+                self.leaves,
+            ]
             while len(self.levels[0]) > 1:
                 self._calculate_next_level()
         self.is_ready = True
@@ -88,21 +102,23 @@ class MerkleTools(object):
     def get_proof(self, index):
         if self.levels is None:
             return None
-        elif not self.is_ready or index > len(self.leaves)-1 or index < 0:
+        elif not self.is_ready or index > len(self.leaves) - 1 or index < 0:
             return None
         else:
             proof = []
             for x in range(len(self.levels) - 1, 0, -1):
                 level_len = len(self.levels[x])
-                if (index == level_len - 1) and (level_len % 2 == 1):  # skip if this is an odd end node
-                    index = int(index / 2.)
+                if (index == level_len - 1) and (
+                    level_len % 2 == 1
+                ):  # skip if this is an odd end node
+                    index = int(index / 2.0)
                     continue
                 is_right_node = index % 2
                 sibling_index = index - 1 if is_right_node else index + 1
                 sibling_pos = "left" if is_right_node else "right"
                 sibling_value = self._to_hex(self.levels[x][sibling_index])
                 proof.append({sibling_pos: sibling_value})
-                index = int(index / 2.)
+                index = int(index / 2.0)
             return proof
 
     def validate_proof(self, proof, target_hash, merkle_root):
@@ -116,12 +132,12 @@ class MerkleTools(object):
             for p in proof:
                 try:
                     # the sibling is a left node
-                    sibling = bytearray.fromhex(p['left'])
+                    sibling = bytearray.fromhex(p["left"])
                     proof_hash = self.hash_function(sibling + proof_hash).digest()
                 except:
                     # the sibling is a right node
-                    print(p["right"]+"__________________________")
-                    sibling = bytearray.fromhex(p['right'])
+                    print(p["right"] + "__________________________")
+                    sibling = bytearray.fromhex(p["right"])
                     proof_hash = self.hash_function(proof_hash + sibling).digest()
 
                 print(proof_hash)
