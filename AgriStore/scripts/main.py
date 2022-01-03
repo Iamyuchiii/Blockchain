@@ -1,44 +1,24 @@
 import pickle
 import os
 from time import sleep
-from autodetection import Autodetection
 from wrapper import Wrapper
 
 
 # settings---------------------------------------------------------------------
 scanpath = "D:\Blockchain\data_scan"
 levels = 10
-filename = "test"
 savepath = "D:\Blockchain\data_save"
-cloud_path = "/Privacy of Blockchain/test.txt"
+cloud_path = "/Privacy of Blockchain"
 with open("../secure_info.txt", "r") as file:
     token = file.read()
 # settings---------------------------------------------------------------------
 
-
-def scanmap():
-    content = []
-    for file in os.listdir("D:\Blockchain\data_scan"):
-        if "txt" in file:
-            content.append(file)
-    return content
-
-
 if __name__ == "__main__":
-    while 1:
-        content = scanmap()
-        if content:
-            for fn in content:
-                with open(f"{scanpath}\{fn}", "rb") as file:
-                    data = pickle.load(file)
-                # data, levels, filename, file_path, token, cloud_path
-            wrapper = Wrapper(data, levels, filename, savepath, token, cloud_path)
-            wrapper.start()
-            os.remove(f"{scanpath}\{fn}")
-            sleep(5)
-        else:
-            print("currently no file in the folder")
-            sleep(5)
+    while True:
+        # data, levels, filename, file_path, token, cloud_path
+        wrapper = Wrapper(scanpath, levels, savepath, token, cloud_path)
+        wrapper.start()
+        sleep(5)
 
 
 # # create dummy data
