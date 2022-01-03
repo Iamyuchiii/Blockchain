@@ -5,6 +5,9 @@ from scripts.functions import get_accounts, local_blockchain
 
 
 def deploy_greenhouseStorage():
+    """Deploying the contract to local ganache network
+    :return: contract object
+    """
     account = get_accounts()
     # deploying contract + verifiying the contract
     # function to deceide which address to use

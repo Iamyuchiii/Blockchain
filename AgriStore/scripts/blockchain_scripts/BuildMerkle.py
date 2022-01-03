@@ -7,6 +7,9 @@ class BuildMerkle:
         self.merkle_tree = self.build_merkle()
 
     def build_merkle(self):
+        """Check for datatype and build merkletree
+        :return:
+        """
         if type(self.data) == dict:
             return self.mt_selfthash()
         else:
@@ -27,4 +30,8 @@ class BuildMerkle:
         return mt
 
     def get_proof(self):
+        """get proof to proof that the data is still intact
+        :return:
+        """
+        pass
         print(self.merkle_tree.get_proof())
