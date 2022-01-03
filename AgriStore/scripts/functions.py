@@ -4,6 +4,9 @@ local_blockchain = ["development", "ganache-local"]
 
 
 def get_accounts():
+    """get account based on the network
+    :return: account from the correct network for deployment
+    """
     # chose the account based on what network you run on
     if network.show_active() in local_blockchain:
         # return account from ganache
