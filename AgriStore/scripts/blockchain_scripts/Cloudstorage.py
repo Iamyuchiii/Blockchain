@@ -1,6 +1,7 @@
 import dropbox
 import logging
 import os
+import ipfshttpclient
 
 
 class Dropbox_cloudstorage:
@@ -26,4 +27,8 @@ class Dropbox_cloudstorage:
 
 
 class Google_drive:
+    pass
+
+
+class ipfs:
     pass
