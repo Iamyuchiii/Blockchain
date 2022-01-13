@@ -32,7 +32,7 @@ Install conda for windows to manage other packages:
 ```
 https://www.anaconda.com/products/individual
 ```
-and use conda envirment file to install rest of the packages 
+and use conda envirment file to install conda envirement with the correct packages: 
 ```
 conda env create -f blockchain.yml
 ```
