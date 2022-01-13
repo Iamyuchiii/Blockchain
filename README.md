@@ -6,9 +6,9 @@ Please follow the steps to setup the program
 ## Installation
 
 More information on smartcontract please watch the following youtube link:
-"""
+```
 https://www.youtube.com/watch?v=M576WGiDBdQ
-"""
+```
 
 First install node.js Node.js (v14.18.1) https://nodejs.org/en/
 
