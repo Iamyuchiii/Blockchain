@@ -1,16 +1,19 @@
-import pickle
-import os
 from time import sleep
 from wrapper import Wrapper
 
 
 # settings---------------------------------------------------------------------
+# path that the system will scan for greenhouse data
 scanpath = "D:\Blockchain\data_scan"
-levels = 10
+# path that the modified/original data will be saved
 savepath = "D:\Blockchain\data_save"
+# path in the cloud of which the data can be saved
 cloud_path = "/Privacy of Blockchain"
+# dropbox token, which is required to use the dropbox
 with open("../secure_info.txt", "r") as file:
     token = file.read()
+# level that can be used to divide the data
+levels = 10
 # settings---------------------------------------------------------------------
 
 if __name__ == "__main__":
