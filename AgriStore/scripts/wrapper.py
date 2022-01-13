@@ -70,6 +70,33 @@ class Wrapper:
         else:
             print("currently no file in the folder")
 
+
+class User:
+    def __init__(self):
+        pass
+
+    def check_contract(filename, network="local"):
+        if network == "local":
+            os.system(
+                f"brownie run scripts\deploy_local.py check_ledger {filename} --network ganache-local"
+            )
+        elif network == "rinkeby":
+            os.system(
+                f"brownie run scripts\deploy_rinkeby.py check_ledger {filename} --network rinkeby"
+            )
+
+    def validation(data, hash):
+        """check if the received data is still the original"""
+        merkle = BuildMerkle(data).build_merkle()
+        if hash == merkle.get_merkle_root():
+            print(
+                f"The current data is still intact\nContract hash: {hash}\nCurrent hash: {merkle.get_merkle_root()}"
+            )
+        else:
+            print(
+                f"The current data has been changed\nContract hash: {hash}\nCurrent hash: {merkle.get_merkle_root()}"
+            )
+
     # # step 1
     # def sortingdata(self):
     #     # 1) sorting the data in to different ranks
