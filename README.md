@@ -1,8 +1,14 @@
-### Tutorial of how to use the program Agristore
+# Agristore
 
-Smart contract turtorial https://www.youtube.com/watch?v=M576WGiDBdQ
+Agristore is a python based program which aims to store greenhouse data using ethereum blockchain.
+Please follow the steps to setup the program
 
-Program requirements
+## Installation
+
+More information on smartcontract please watch the following youtube link:
+"""
+https://www.youtube.com/watch?v=M576WGiDBdQ
+"""
 
 First install node.js Node.js (v14.18.1) https://nodejs.org/en/
 
