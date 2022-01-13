@@ -11,11 +11,13 @@ class BuildMerkle:
         :return:
         """
         if type(self.data) == dict:
-            return self.mt_selfthash()
+            return self.dicthash()
+        elif type(self.data) == list:
+            return self.listhash()
         else:
-            raise Exception("data type is not supported, please use " "dictionary")
+            raise Exception("data type is not supported, please use dictionary or list")
 
-    def mt_selfthash(self):
+    def dicthash(self):
         """
         Makes a merkle tree formation using provided data (block_content)
         :param data: block_content from the block
@@ -29,9 +31,8 @@ class BuildMerkle:
         mt.make_tree()
         return mt
 
-    def get_proof(self):
-        """get proof to proof that the data is still intact
-        :return:
-        """
-        pass
-        print(self.merkle_tree.get_proof())
+    def listhash(self):
+        mt = MerkleTools(hash_type="sha256")
+        mt.add_leaf(self.data, True)
+        mt.make_tree()
+        return mt
