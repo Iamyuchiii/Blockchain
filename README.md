@@ -83,7 +83,7 @@ levels = 10
 ```
 
 ## More info
-For more information on smartcontract please watch the following youtube link:
+For more information for smartcontract and brownie usage please watch the following youtube link:
 ```
 https://www.youtube.com/watch?v=M576WGiDBdQ
 ```
