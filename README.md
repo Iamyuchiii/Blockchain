@@ -65,7 +65,7 @@ https://www.dropbox.com/developers/apps/create
 Make a account for metamask and infura for deploying/interacting the contract. This step can be skipped if the program is ran locally using ganache.
 
 ## Demo run
-To use the program (if tested on local, open the ganache app) run the main script under folder AgriStore/scripts/main.py. The settings needs to be changed to ur local paths
+To use the program (if tested locally, open the ganache app first) run the main script under folder AgriStore/scripts/main.py. The settings needs to be changed to ur local paths
 ```python
 # settings---------------------------------------------------------------------
 # path that the system will scan for greenhouse data
