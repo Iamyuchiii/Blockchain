@@ -80,7 +80,7 @@ class ipfs:
         self.client.close()
 
 
-client = ipfs()
-client.init_maps("D:\Blockchain")
-client.uploadfile()
+# client = ipfs()
+# client.init_maps("D:\Blockchain")
+# client.uploadfile()
 # client.viewfile("QmQVZakc4EEmdZpFgP9PgWGPPkyDwphBraf3prLUpi9hgq")

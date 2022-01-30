@@ -10,7 +10,7 @@ savepath = "D:\Blockchain\data_save"
 # path in the cloud of which the data can be saved
 cloud_path = "/Privacy of Blockchain"
 # dropbox token, which is required to use the dropbox
-with open("../secure_info.txt", "r") as file:
+with open("D:\Blockchain\secure_info.txt", "r") as file:
     token = file.read()
 # level that can be used to divide the data
 levels = 10
