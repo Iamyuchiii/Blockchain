@@ -44,28 +44,28 @@ export PRIVATE_KEY = xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export WEB3_INFURA_PROJECT_ID = xxxxxxxxxxxxxxxxxxxxxxxxxxx
 export ETHERSCAN_TOKEN = xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-###First 
+### First 
 Download the correct version of solidity in visual studio code by pressing shift+control+p to open the search bar. Select "Solidity: change global compiler version" and install version 0.8.10.
 Select the correct python envirement with correct package by pressing shift+control+p and select "Python x.x.xx 64-bit('Blockchainv2':conda).
 
-###Second
+### Second
 Run the correct conda interpreter by click on run for a random python script then type in the console:
 ```
 brownie compile
 ```
 to compile the contract and download its required packages
 
-###Third
+### Third
 Currently using dropbox as cloud storage, therefore a dropbox token needs to be required, follow the instrustion on the following link:
 ```
 https://www.dropbox.com/developers/apps/create
 ```
 
-###fourth (if running on testnet or publicnet)
+### Fourth (if running on testnet or publicnet)
 Make a account for metamask and infura for deploying/interacting the contract. This step can be skipped if the program is ran locally using ganache.
 
 ## Demo run
-To use the program (if tested on local, open the ganache app) run the main script under folder AgriStore/scripts/main.py. The settings needs to be changed to ur local paths
+To use the program (if tested locally, open the ganache app first) run the main script under folder AgriStore/scripts/main.py. The settings needs to be changed to ur local paths
 ```python
 # settings---------------------------------------------------------------------
 # path that the system will scan for greenhouse data
@@ -83,7 +83,7 @@ levels = 10
 ```
 
 ## More info
-For more information on smartcontract please watch the following youtube link:
+For more information for smartcontract and brownie usage please watch the following youtube link:
 ```
 https://www.youtube.com/watch?v=M576WGiDBdQ
 ```
