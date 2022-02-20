@@ -4,7 +4,7 @@ from diffpriv_laplace import DiffPrivLaplaceMechanism
 import matplotlib.pyplot as plt
 
 
-class Datafilter:
+class PrivacyFilter:
     def __init__(self, data):
         """Class for sorting datas
         :param data:
@@ -19,11 +19,11 @@ class Datafilter:
         """
         sorted_data = {}
         difference = (max(self.data) - min(self.data)) / ranks
-        minimum = min(self.data)
-        upperscale = minimum + difference
+        lowerscale = min(self.data)
+        upperscale = lowerscale + difference
         for i in range(ranks):
-            sorted_data[minimum, upperscale] = []
-            minimum += difference
+            sorted_data[lowerscale, upperscale] = []
+            lowerscale += difference
             upperscale += difference
 
         for weight in self.data:
@@ -76,7 +76,6 @@ class Benchmark:
 
     def rmse(prediction, target):
         return np.sqrt(((prediction - target) ** 2).mean())
-
 
 # data = pd.read_pickle("D:\Blockchain\dummydata.txt")
 # print(data)
