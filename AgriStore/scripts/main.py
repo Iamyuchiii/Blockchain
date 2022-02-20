@@ -1,26 +1,33 @@
+from textwrap import wrap
 from time import sleep
 from wrapper import Wrapper
 
 
 # settings---------------------------------------------------------------------
+network = "local"
+typefilter = "sub-sampling"
+typestorage = "dropbox"
+deploy = False
+# base path
+basepath = "E:\Blockchain"
 # path that the system will scan for greenhouse data
-scanpath = "D:\Blockchain\data_scan"
+scanpath = f"{basepath}\data_scan"
 # path that the modified/original data will be saved
-savepath = "D:\Blockchain\data_save"
+savepath =  f"{basepath}\data_save"
 # path in the cloud of which the data can be saved
 cloud_path = "/Privacy of Blockchain"
 # dropbox token, which is required to use the dropbox
-with open("D:\Blockchain\secure_info.txt", "r") as file:
+with open("E:\Blockchain\secure_info.txt", "r") as file:
     token = file.read()
 # level that can be used to divide the data
-levels = 10
+ranks = 10
 # settings---------------------------------------------------------------------
 
 if __name__ == "__main__":
     while True:
-        # data, levels, filename, file_path, token, cloud_path
-        wrapper = Wrapper(scanpath, levels, savepath, token, cloud_path)
-        wrapper.start()
+        # network, typefilter, typestorage, scanpath, savepath, ranks, token, cloud_path, deploy=False
+        wrapper = Wrapper(network, typefilter, typestorage, scanpath, savepath, ranks, token, cloud_path, deploy)
+        wrapper.start2()
         sleep(5)
 
 

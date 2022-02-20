@@ -4,3 +4,4 @@ test_data
 /secure_info.txt
 /data_save/
 AgriStore/scripts/testing.py
+local_save/dummydata.txt
