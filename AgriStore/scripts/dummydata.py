@@ -1,11 +1,10 @@
 from numpy import pi
 import scipy.stats as stats
-import pickle
-from blockchain_scripts.Data_filtering import *
+from blockchain_scripts.Date_privacy import *
 
 data = stats.uniform.rvs(size=100, loc=40, scale=80, random_state=9)
-df = Datafilter(data)
+df = PrivacyFilter(data)
 print(df.sortrank(10))
 
-with open("D:\Blockchain\data_scan\\dummydata2.txt") as file:
-    pickle.dump(data, file)
+with open("E:\Blockchain\data_scan\\dummydata.txt", "w") as file:
+    np.savetxt(file, data)
