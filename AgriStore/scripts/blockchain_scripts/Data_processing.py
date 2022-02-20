@@ -41,5 +41,5 @@ class Data_procsseing():
         self.data = data
 
     def save_dict_txt(self, filename, path_to_save):
-        with open(f"{path_to_save}\{filename}.txt", "w") as file:
+        with open(f"{path_to_save}\{filename}", "w") as file:
             file.write(json.dumps(self.data))
