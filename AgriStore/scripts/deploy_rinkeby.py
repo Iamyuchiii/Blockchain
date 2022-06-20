@@ -14,6 +14,7 @@ def deploy_contract():
         publish_source=config["networks"][network.show_active()].get("verify"),
     )
     print(f"contract deployed to {greenhouse_Storage.address}")
+    greenhouse_Storage.wait(1)
     return greenhouse_Storage
 
 

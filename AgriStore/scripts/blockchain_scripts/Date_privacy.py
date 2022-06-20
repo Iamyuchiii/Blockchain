@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from diffpriv_laplace import DiffPrivLaplaceMechanism
+from diffprivlib.mechanisms import *
 import matplotlib.pyplot as plt
 
 
@@ -34,6 +34,19 @@ class PrivacyFilter:
         sorted_data = {str(key): value for key, value in sorted_data.items()}
         return sorted_data
 
+    def laplacian_noise2(self, epsilon=1, sensitivity=1, roundNumber=False):
+        noise_data = []
+        lower = min(self.data)*0.8
+        upper = max(self.data)*1.2
+        laplace = LaplaceTruncated(epsilon=epsilon, sensitivity=sensitivity, lower=lower, upper=upper)
+        for i in self.data:
+            adding_noise = laplace.randomise(i)
+            if roundNumber:
+                noise_data.append(round(adding_noise))
+            else:
+                noise_data.append(adding_noise)
+        return noise_data
+
     def laplacian_noise(self, location=1, sensitivity=1, epsilon=1):
         """Adding laplacian noise over the entire dataset
         :param location: mu, default = 1
@@ -55,19 +68,6 @@ class PrivacyFilter:
         exponential_noise = np.random.exponential(maxlimit)
         noisydata = self.data + exponential_noise
         return noisydata
-
-    def laplacian_median(self, epsilon=1):
-        """Adding laplacian noise to median query
-        :param epsilon: privacy budget, default = 1
-        :return: query output with additive noise
-        """
-        average = self.data.mean()
-        lower = min(self.data)
-        upper = max(self.data)
-        count = len(self.data)
-        anoymizer = DiffPrivLaplaceMechanism(epsilon)
-        anoymized = anoymizer.anonymize_mean(average, lower, upper, count)
-        return anoymized
 
 
 class Benchmark:

@@ -1,5 +1,7 @@
 from blockchain_scripts.merkle_tree import *
-
+import imagehash
+import os
+from PIL import Image
 
 class BuildMerkle:
     def __init__(self, data):
@@ -36,3 +38,11 @@ class BuildMerkle:
         mt.add_leaf(self.data, True)
         mt.make_tree()
         return mt
+
+class Image_hash():
+    def __init__(self, image):
+        self.image = image
+
+    def image_hasing(self):
+        hash = imagehash.average_hash(self.image)
+        return hash

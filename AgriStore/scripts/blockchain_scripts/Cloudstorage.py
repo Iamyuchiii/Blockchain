@@ -34,20 +34,17 @@ class Google_drive:
 
 
 class ipfs:
-    def __init__(self):
+    def __init__(self, savepath, rootpath):
+        self.savepath = savepath
         self.client = ipfshttpclient.connect(session=True)
-        self.rootpath = ""
+        self.rootpath = rootpath
 
     def init_maps(self, path, map_name="ifps"):
         map_name = "ipfs"
         map_hash = "hash_info"
-        map_storage = "cloud_storage"
         if not os.path.exists(f"{path}\{map_name}"):
             os.makedirs(f"{path}\{map_name}")
         self.rootpath = f"{path}\{map_name}"
-
-        if not os.path.exists(f"{self.rootpath}\{map_storage}"):
-            os.makedirs(f"{self.rootpath}\{map_storage}")
 
     def clientid(self):
         return self.client.id()
@@ -56,8 +53,9 @@ class ipfs:
         print(self.client.version())
 
     def uploadfile(self):
-        upload = self.client.add(f"{self.rootpath}\cloud_storage", recursive=True)
+        upload = self.client.add(f"{self.savepath}", recursive=True)
         info_save = [dict(info) for info in upload]
+        hash = info_save[0]["Hash"]
 
         if not os.path.exists(f"{self.rootpath}\hash_info"):
             os.makedirs(f"{self.rootpath}\hash_info")
@@ -71,6 +69,8 @@ class ipfs:
         # save the info in a file
         with open(f"{self.rootpath}\hash_info\{str(time)}.txt", "w") as file:
             file.write(json.dumps(info))
+
+        return hash
 
     def viewfile(self, hash):
         view = self.client.cat(hash).decode("UTF-8")
